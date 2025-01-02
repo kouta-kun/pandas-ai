@@ -123,6 +123,7 @@ class CodeCleaning(BaseLogicUnit):
 
     def get_code_to_run(self, code: str, context: CodeExecutionContext) -> Any:
         if self._is_malicious_code(code):
+            print('search for malicious code through regex?', self.do_regex_search)
             raise MaliciousQueryError(
                 "Code shouldn't use 'os', 'io' or 'chr', 'b64decode' functions as this could lead to malicious code execution."
             )
