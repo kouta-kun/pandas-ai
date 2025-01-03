@@ -29,6 +29,7 @@ class ErrorCorrectionPipeline:
         query_exec_tracker: QueryExecTracker = None,
         on_prompt_generation=None,
         on_code_generation=None,
+        code_cleaning: Optional[CodeCleaning] = None,
     ):
         self.pipeline = Pipeline(
             context=context,
@@ -37,7 +38,7 @@ class ErrorCorrectionPipeline:
             steps=[
                 ErrorPromptGeneration(on_prompt_generation=on_prompt_generation),
                 CodeGenerator(on_execution=on_code_generation),
-                CodeCleaning(),
+                code_cleaning or CodeCleaning(),
             ],
         )
         self._context = context

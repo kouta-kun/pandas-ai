@@ -53,6 +53,10 @@ class GenerateChatPipeline:
             server_config=context.config.log_server
         )
 
+        code_cleaning = CodeCleaning(skip_if=self.no_code,
+                                on_failure=self.on_code_cleaning_failure,
+                                on_retry=self.on_code_retry,
+                                do_regex_search=do_regex_search_code_cleaning, )
         self.code_generation_pipeline = Pipeline(
             context=context,
             logger=logger,
@@ -69,12 +73,7 @@ class GenerateChatPipeline:
                     on_execution=on_code_generation,
                 ),
                 CachePopulation(skip_if=self.is_cached),
-                CodeCleaning(
-                    skip_if=self.no_code,
-                    on_failure=self.on_code_cleaning_failure,
-                    on_retry=self.on_code_retry,
-                    do_regex_search=do_regex_search_code_cleaning,
-                ),
+                code_cleaning,
             ],
         )
 
@@ -101,6 +100,7 @@ class GenerateChatPipeline:
             query_exec_tracker=self.query_exec_tracker,
             on_code_generation=on_code_generation,
             on_prompt_generation=on_prompt_generation,
+            code_cleaning=code_cleaning,
         )
 
         self.judge = judge
