@@ -214,28 +214,7 @@ Code running:
             # Check attribute access for restricted libraries
             elif isinstance(node, (ast.Attribute, ast.Subscript)):
                 check_restricted_access(node)
-        if not self.do_regex_search:
-            return False
-        dangerous_modules = [
-            " os",
-            " io",
-            ".os",
-            ".io",
-            "'os'",
-            "'io'",
-            '"os"',
-            '"io"',
-            "chr(",
-            "chr)",
-            "chr ",
-            "(chr",
-            "b64decode",
-        ]
-
-        return any(
-            re.search(r"\b" + re.escape(module) + r"\b", code)
-            for module in dangerous_modules
-        )
+        return False
 
     def _is_jailbreak(self, node: ast.stmt) -> bool:
         """
